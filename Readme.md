@@ -19,7 +19,7 @@ A **caboodle** is an entity world that encapsulates entities, components, and sy
 First include the library.
 
 
-> ```
+> ```cs
 > using CaboodleES;
 > ```
 
@@ -40,7 +40,7 @@ You can think of entities as containers of components. Internally they do not ac
 
 To create an entity you must call the create method inside the caboodle object.
 
-> ```
+> ```cs
 > var entity = caboodle.Entities.Create();
 > ```
 
@@ -49,7 +49,7 @@ Removing an entity will release all of its components back to the pool.
 
 Entities can be removed in two ways.
 
-> ```
+> ```cs
 > entity.Destroy();
 >     // or
 > caboodle.Entities.Remove(entity)
@@ -72,7 +72,7 @@ Components can be added in two ways.
 Removing a component is slower than adding a component. Each component inside of the component collection that matches its type must be visited to find the indice for removal, this will be optimized in the future. On removal components are released to a pool.
 
 Components can be removed in two ways.
-> ```
+> ```cs
 > var c = entity.RemoveComponent<Rigid>();
 >     // or
 > var c = caboodle.Entities.Components.RemoveComponent<Rigid>(entity.Id);
@@ -131,7 +131,6 @@ Inside of your project create an empty GameObject and add a new monobehavior.
 
 >  ```
 
-This library is c
 
 ## TODO List
 * Remove entities using cache
@@ -141,11 +140,3 @@ This library is c
 * Net code
 * Documentation
 
-
-#### Relative Reference Frame/Bubbles
-A **reference frame** is used to describe any floating point local position relative to the absolute origin of the universe in double precision. 
-Physic objects are grouped inside of invisible bubble like objects, the bubble moves with a trajectory similar to that of the players thus allowing to keep objects and the players local velocities close to 0 m/s.
-
-The objective is to get more accurate physic simulation at high velocities. For example players ontop of a spaceship zooming through the galaxy at 1000 m/s would have local velocities of 0 m/s. The bubble would move the universe around them as would other groupings of physic objects with similar trajectories.
-
-I plan on re-implementing this design using **CaboodleES** instead of using Unity3D's component architecture.
