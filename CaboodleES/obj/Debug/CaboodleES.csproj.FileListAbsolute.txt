@@ -1,0 +1,14 @@
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\Aurora\bin\Debug\Aurora.exe.config
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\Aurora\bin\Debug\Aurora.exe
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\Aurora\bin\Debug\Aurora.pdb
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\Aurora\bin\Debug\System.Data.SQLite.dll
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\Aurora\obj\Debug\CaboodleES.csprojResolveAssemblyReference.cache
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\Aurora\obj\Debug\Aurora.exe
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\Aurora\obj\Debug\Aurora.pdb
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\bin\Debug\System.Data.SQLite.dll
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\obj\Debug\CaboodleES.csprojResolveAssemblyReference.cache
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\bin\Debug\CaboodleES.exe.config
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\bin\Debug\CaboodleES.exe
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\bin\Debug\CaboodleES.pdb
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\obj\Debug\CaboodleES.exe
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\obj\Debug\CaboodleES.pdb

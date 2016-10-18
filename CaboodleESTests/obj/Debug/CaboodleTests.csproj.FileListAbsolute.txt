@@ -1,0 +1,14 @@
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\AuroraTests\bin\Debug\AuroraTests.dll
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\AuroraTests\bin\Debug\AuroraTests.pdb
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\AuroraTests\bin\Debug\Aurora.exe
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\AuroraTests\bin\Debug\Aurora.pdb
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\AuroraTests\obj\Debug\CaboodleTests.csprojResolveAssemblyReference.cache
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\AuroraTests\obj\Debug\AuroraTests.dll
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\Aurora\AuroraTests\obj\Debug\AuroraTests.pdb
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\bin\Debug\AuroraTests.dll
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\bin\Debug\AuroraTests.pdb
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\obj\Debug\CaboodleTests.csprojResolveAssemblyReference.cache
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\obj\Debug\AuroraTests.dll
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\obj\Debug\AuroraTests.pdb
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\bin\Debug\CaboodleES.exe
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\bin\Debug\CaboodleES.pdb

@@ -1,0 +1,6 @@
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\bin\Release\System.Data.SQLite.dll
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\bin\Release\CaboodleES.exe.config
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\bin\Release\CaboodleES.exe
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\bin\Release\CaboodleES.pdb
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\obj\Release\CaboodleES.exe
+C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleES\obj\Release\CaboodleES.pdb
