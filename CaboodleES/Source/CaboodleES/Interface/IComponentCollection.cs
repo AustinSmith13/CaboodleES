@@ -8,6 +8,6 @@
         bool Has(ulong eid);
         void Clear();
         ulong GetFilter();
-        System.Type GetCType();
+        System.Type GetCType(); // [DEPRECATED]
     }
 }

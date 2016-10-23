@@ -8,12 +8,11 @@ namespace CaboodleES.Manager
     {
         private Dictionary<System.Type, Stack<Component>> reusableComponents =
             new Dictionary<System.Type, Stack<Component>>();
-        private readonly int maxCompPerType = 100;
 
-        public PoolManager()
-        {
+        // Default 
+        private readonly int maxCompPerType = 128;
 
-        }
+        public PoolManager() { }
 
         public PoolManager(int maxComps)
         {
@@ -22,7 +21,6 @@ namespace CaboodleES.Manager
 
         public Component ReleaseComponent(Component component)
         {
-            return null;
             Stack<Component> cs = null;
             if(!reusableComponents.TryGetValue(component.GetType(), out cs))
             {

@@ -133,7 +133,6 @@ Inside of your project create an empty GameObject and add a new monobehavior.
 
 
 ## TODO List
-* Remove entities using cache
 * System component masks
 * inter-system communication using events
 * Database for state storage (SQL)

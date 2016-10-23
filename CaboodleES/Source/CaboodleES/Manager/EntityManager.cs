@@ -12,11 +12,17 @@ namespace CaboodleES.Manager
     {
         #region Properties
 
+        /// <summary>
+        /// The number of entities in the collection.
+        /// </summary>
         public int Count
         {
             get { return _entities.Count; }
         }
 
+        /// <summary>
+        /// The component manager.
+        /// </summary>
         public ComponentManager Components
         {
             get { return _components; }

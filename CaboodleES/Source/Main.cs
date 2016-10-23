@@ -17,7 +17,7 @@ namespace CaboodleES
             Stopwatch watch = new Stopwatch();
 
             var world = new Caboodle();
-            int iterations = 100000;
+            int iterations = 1000;
 
             while (true)
             {

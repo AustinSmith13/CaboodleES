@@ -4,15 +4,15 @@
 namespace CaboodleES
 {
     /// <summary>
-    /// Caboodle holds the entity world : Version 0.5.4
+    /// Caboodle holds the entity world : Version 0.6.5
     /// </summary>
     public sealed class Caboodle : Interface.ICaboodle
     {
         #region Properties
 
-        internal PoolManager Pool { get { return _poolManager; } }
         public EntityManager Entities { get { return _entityManager; } }
         public SystemsManager Systems { get { return _systemsManager; } }
+        internal PoolManager Pool { get { return _poolManager; } }
         
         #endregion
 
@@ -25,7 +25,7 @@ namespace CaboodleES
         {
             _entityManager = new EntityManager(this); 
             _systemsManager = new SystemsManager(this);
-            _poolManager = new PoolManager();
+            _poolManager = new PoolManager(8191);
         }
 
         public EntityManager GetEntityManager()
