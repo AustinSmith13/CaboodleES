@@ -1,6 +1,6 @@
 # CaboodleES
 
-*Version 0.5.4 alpha*
+*Version 0.6.5 alpha*
 
 A fast and simple **Entity System Framework** library for C# using .Net Framework 3.5.
 
@@ -133,7 +133,6 @@ Inside of your project create an empty GameObject and add a new monobehavior.
 
 
 ## TODO List
-* Remove entities using cache
 * System component masks
 * inter-system communication using events
 * Database for state storage (SQL)
