@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using CaboodleES.Utils;
-using CaboodleES.Interface;
 
 
 namespace CaboodleES.Manager
 {
     /// <summary>
-    /// Manages all entities (entities are simply ulong that point to components).
+    /// Manages all entities.
     /// </summary>
     public sealed class EntityManager
     {
+        public event global::System.Action<Entity> OnAdded;
+        public event global::System.Action<Entity> OnRemoved;
+        public event global::System.Action<int> OnChange;
+
         #region Properties
 
         /// <summary>
@@ -17,7 +20,7 @@ namespace CaboodleES.Manager
         /// </summary>
         public int Count
         {
-            get { return _entities.Count; }
+            get { return entities.Count; }
         }
 
         /// <summary>
@@ -31,15 +34,32 @@ namespace CaboodleES.Manager
         #endregion
 
         private ComponentManager _components;
-        private Dictionary<ulong, Entity> _entities;
+        private Table<Entity> entities;
+        private Stack<Entity> entityPool;
         private Caboodle world;
-        private ulong next;
+        private int next;
 
         public EntityManager(Caboodle world)
         {
-            _entities = new Dictionary<ulong, Entity>();
             this._components = new ComponentManager(world);
+            this.entities = new Table<Entity>();
+            this.entityPool = new Stack<Entity>();
             this.world = world;
+
+            _components.OnAdded += OnEntityAddedComponent;
+            _components.OnRemoved += OnEntityRemovedComponent;
+        }
+
+        public void OnEntityAddedComponent(int eid, ComponentInfo info)
+        {
+            Get(eid).mask.Set(info.id, true);
+            OnChange?.Invoke(eid);
+        }
+
+        public void OnEntityRemovedComponent(int eid, ComponentInfo info)
+        {
+            Get(eid).mask.Set(info.id, false);
+            OnChange?.Invoke(eid);
         }
 
         /// <summary>
@@ -48,18 +68,23 @@ namespace CaboodleES.Manager
         /// <returns></returns>
         public Entity Create()
         {
-            var entity = new Entity(world, next++);
-            _entities.Add(entity.Id, entity);
+            Entity entity;
+            if (entityPool.Count > 0)
+                entity = entityPool.Pop();
+            else
+                entity = new Entity(world, next++);
+
+            entities.Set(entity.Id, entity);
+            OnAdded?.Invoke(entity);
             return entity;
         }
 
         /// <summary>
         /// Gets the entity associated with the eid.
         /// </summary>
-        public Entity Get(ulong eid)
+        public Entity Get(int eid)
         {
-            Entity ent = null;
-            _entities.TryGetValue(eid, out ent);
+            Entity ent = entities.Get(eid);
 
             if (ent == null)
                 throw new NoSuchEntityException("No such entity, " + eid, eid);
@@ -70,9 +95,9 @@ namespace CaboodleES.Manager
         /// <summary>
         /// Returns true if the entity id exists.
         /// </summary>
-        public bool Has(ulong eid)
+        public bool Has(int eid)
         {
-            return _entities.ContainsKey(eid);
+            return entities.Get(eid) != null;
         }
 
         /// <summary>
@@ -80,25 +105,29 @@ namespace CaboodleES.Manager
         /// </summary>
         public bool Has(Entity entity)
         {
-            return _entities.ContainsKey(entity.Id);
+            return entities.Get(entity.Id) != null;
         }
 
         /// <summary>
-        /// Removes an entity and its components (slow).
+        /// Removes an entity and its components.
+        /// Pools unused entities.
         /// </summary>
-        public void Remove(ulong eid)
+        public void Remove(int eid)
         {
-            _entities.Remove(eid);
+            Entity entity = entities.Get(eid);
+            entity.mask.Clear();
+            entityPool.Push(entity);
+            OnRemoved?.Invoke(entity);
             _components.RemoveComponents(eid);
-        }
+            entities.Remove(eid);
+    }
 
         /// <summary>
-        /// Removes an entity and its components (slow).
+        /// Removes an entity and its components.
         /// </summary>
         public void Remove(ref Entity entity)
         {
-            _entities.Remove(entity.Id);
-            _components.RemoveComponents(entity.Id);
+            this.Remove(entity.Id);
             entity = null;
         }
 
@@ -107,7 +136,7 @@ namespace CaboodleES.Manager
         /// </summary>
         public void Clear()
         {
-            _entities.Clear();
+            entities.Clear();
             _components.Clear();
         }
     }

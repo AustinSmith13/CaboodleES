@@ -14,6 +14,10 @@ namespace CaboodleES
 
         public Group(Caboodle world, params Type[] c)
         {
+
+
+            Group a = new Group(new Caboodle(), null);
+
             this._world = world;
             this._buffer = new IEnumerable<Component>[c.Length];
             this._group = c;

@@ -1,0 +1,8 @@
+C:\Source\CaboodleES\App\bin\Debug\App.exe.config
+C:\Source\CaboodleES\App\bin\Debug\App.exe
+C:\Source\CaboodleES\App\bin\Debug\App.pdb
+C:\Source\CaboodleES\App\bin\Debug\CaboodleES.dll
+C:\Source\CaboodleES\App\bin\Debug\CaboodleES.pdb
+C:\Source\CaboodleES\App\obj\Debug\App.csprojResolveAssemblyReference.cache
+C:\Source\CaboodleES\App\obj\Debug\App.exe
+C:\Source\CaboodleES\App\obj\Debug\App.pdb

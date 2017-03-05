@@ -12,3 +12,10 @@ C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests
 C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\obj\Debug\AuroraTests.pdb
 C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\bin\Debug\CaboodleES.exe
 C:\Users\Austin\Documents\Visual Studio 2015\Projects\CaboodleES\CaboodleESTests\bin\Debug\CaboodleES.pdb
+C:\Source\CaboodleES\CaboodleESTests\bin\Debug\AuroraTests.dll
+C:\Source\CaboodleES\CaboodleESTests\bin\Debug\AuroraTests.pdb
+C:\Source\CaboodleES\CaboodleESTests\bin\Debug\CaboodleES.pdb
+C:\Source\CaboodleES\CaboodleESTests\obj\Debug\CaboodleTests.csprojResolveAssemblyReference.cache
+C:\Source\CaboodleES\CaboodleESTests\obj\Debug\AuroraTests.dll
+C:\Source\CaboodleES\CaboodleESTests\obj\Debug\AuroraTests.pdb
+C:\Source\CaboodleES\CaboodleESTests\bin\Debug\CaboodleES.dll

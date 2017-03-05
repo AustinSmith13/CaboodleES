@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using CaboodleES.Interface;
 
 
 namespace CaboodleES.Manager
 {
     internal sealed class PoolManager
     {
-        private Dictionary<System.Type, Stack<Component>> reusableComponents =
-            new Dictionary<System.Type, Stack<Component>>();
+        private Dictionary<global::System.Type, Stack<Component>> reusableComponents =
+            new Dictionary<global::System.Type, Stack<Component>>();
 
         // Default 
         private readonly int maxCompPerType = 128;

@@ -8,11 +8,11 @@ namespace CaboodleES
     public class NoSuchEntityException : Exception
     {
 
-        public ulong entity { get; private set; }
+        public int entity { get; private set; }
 
         public NoSuchEntityException() : base() { }
 
-        public NoSuchEntityException(string message, ulong entity)
+        public NoSuchEntityException(string message, int entity)
             : base(message)
         {
             this.entity = entity;
@@ -22,7 +22,7 @@ namespace CaboodleES
             : base(info, context)
         {
             if (info != null)
-                this.entity = info.GetUInt64("entity");
+                this.entity = info.GetInt32("entity");
         }
 
         // Perform serialization

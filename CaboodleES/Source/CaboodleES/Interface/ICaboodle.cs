@@ -8,7 +8,7 @@ namespace CaboodleES.Interface
     public interface ICaboodle
     {
         Manager.EntityManager GetEntityManager();
-        Manager.SystemsManager GetSystemsManager();
+        Manager.SystemManager GetSystemsManager();
         void Union(ICaboodle caboodle);
         void Clear();
     }

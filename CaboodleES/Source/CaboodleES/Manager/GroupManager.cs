@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using CaboodleES.Interface;
 using CaboodleES.Utils;
 
 
@@ -9,24 +7,30 @@ namespace CaboodleES.Manager
 {
     internal sealed class GroupManager
     {
-        private Caboodle _world;
-        private Dictionary<ulong, Group> groupCache;
+        private Caboodle caboodle;
 
-        internal GroupManager(Caboodle world)
+        internal GroupManager(Caboodle caboodle)
         {
-            this._world = world;
+            this.caboodle = caboodle;
         }
 
-        internal Group GetGroup(params Component[] group)
+        internal void Add(Type[] types)
         {
-            ulong key = 0ul;
-            for(int i = 0; i < group.Length; i++)
-            {
-                ulong a = _world.Entities.Components.GetFilter(group[i].GetType());
-                key = key | a;
-            }
 
-            return groupCache[key];
+        }
+
+        internal IList<Entity> Get(int i)
+        {
+            return null;
+        }
+
+        internal void Process(Entity ent)
+        {
+            var comps = ent.GetComponents();
+            //for(int i = 0; i < masks.Count; i++)
+          //  {
+
+          //  }
         }
     }
 }

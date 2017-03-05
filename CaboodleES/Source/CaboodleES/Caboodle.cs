@@ -4,28 +4,40 @@
 namespace CaboodleES
 {
     /// <summary>
-    /// Caboodle holds the entity world : Version 0.6.5
+    /// Caboodle holds the entity world
     /// </summary>
     public sealed class Caboodle : Interface.ICaboodle
     {
         #region Properties
 
+        public int Id { get { return _id; } }
         public EntityManager Entities { get { return _entityManager; } }
-        public SystemsManager Systems { get { return _systemsManager; } }
+        public SystemManager Systems { get { return _systemsManager; } }
+        public EventManager Events { get { return _eventsManager; } }
         internal PoolManager Pool { get { return _poolManager; } }
         
         #endregion
 
-        private EntityManager _entityManager;
-        private SystemsManager _systemsManager;
-        private PoolManager _poolManager;
+        private readonly EntityManager _entityManager;
+        private readonly SystemManager _systemsManager;
+        private readonly PoolManager _poolManager;
+        private readonly EventManager _eventsManager;
+        private readonly int _id;
+        private static int _next = 0;
 
 
         public Caboodle()
         {
-            _entityManager = new EntityManager(this); 
-            _systemsManager = new SystemsManager(this);
+            _id = _next++;
             _poolManager = new PoolManager(8191);
+            _entityManager = new EntityManager(this); 
+            _systemsManager = new SystemManager(this);
+            _eventsManager = new EventManager(this);
+        }
+
+        public static string GetVersion()
+        {
+            return global::System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         public EntityManager GetEntityManager()
@@ -33,15 +45,16 @@ namespace CaboodleES
             return _entityManager;
         }
 
-        public SystemsManager GetSystemsManager()
+        public SystemManager GetSystemsManager()
         {
             return _systemsManager;
         }
 
-        public void Union(Interface.ICaboodle caboodle)
-        {
-            //this.Entities.Has
-        }
+        public void Union(Interface.ICaboodle caboodle) { }
+
+        public void Intersection(Interface.ICaboodle caboodle) { }
+
+        public void Difference(Interface.ICaboodle caboodle) { }
 
         public void Clear()
         {

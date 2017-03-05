@@ -1,34 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using global::System;
+using global::System.Collections.Generic;
 using CaboodleES.Interface;
+
 
 namespace CaboodleES.Manager
 {
+    /// <summary>
+    /// Manages component collections by type.
+    /// </summary>
     public sealed class ComponentManager
     {
-        public event Action<ulong, Component> OnComponentRemoved;
-        public event Action<ulong, Component> OnComponentAdded;
+        public event Action<int, ComponentInfo> OnRemoved;
+        public event Action<int, ComponentInfo> OnAdded;
 
         private List<IComponentCollection> componentCollections;
-        private Dictionary<System.Type, IComponentCollection> componentCollectionCache;
+        private Dictionary<global::System.Type, IComponentCollection> componentCollectionCache;
         private Caboodle world;
-        private byte cfilter;
-
+        private int _count = 0;
 
         public ComponentManager(Caboodle world)
         {
             componentCollections = new List<IComponentCollection>();
-            componentCollectionCache = new Dictionary<System.Type, IComponentCollection>();
+            componentCollectionCache = new Dictionary<global::System.Type, IComponentCollection>();
             this.world = world;
         }
 
+        public void RegisterComponent<C>() where C : Component, new()
+        {
+            IComponentCollection collection = null;
+            componentCollectionCache.TryGetValue(typeof(C), out collection);
+            if (collection == null)
+            {
+                // Assigns the component collection a filter identifier
+                collection = new ComponentCollection<C>(world, _count++);
+               // var c = global::System.Activator.CreateInstance(typeof(C), null);
+                componentCollections.Add(collection);
+                componentCollectionCache.Add(typeof(C), collection);
+  
+            }
+        }
+
         /// <summary>
-        /// Adds/Creates a component associated with the given entity.
+        /// Adds/Creates a component associated with the given entity id.
         /// </summary>
-        /// <typeparam name="C"></typeparam>
-        /// <param name="eid"></param>
-        /// <returns></returns>
-        public C AddComponent<C>(ulong eid)
+        public C AddComponent<C>(int eid)
             where C : Component, new()
         {
             IComponentCollection collection = null;
@@ -37,42 +52,59 @@ namespace CaboodleES.Manager
             if (collection == null)
             {
                 // Assigns the component collection a filter identifier
-                if (cfilter > 64) throw new System.Exception("Component type cap reached.");
-                ulong filter = (1ul << cfilter++);
-                collection = new ComponentCollection<C>(world, filter);
+                collection = new ComponentCollection<C>(world, _count++);
                 componentCollections.Add(collection);
                 componentCollectionCache.Add(typeof(C), collection);
             }
 
             var c = collection.Add(eid) as C;
-            OnComponentAdded?.Invoke(eid, c);
+
+            ComponentInfo info;
+            info.id = collection.GetId();
+            info.component = c;
+
+            OnAdded?.Invoke(eid, info);
             
             return c;
         }
 
         /// <summary>
+        /// Retrieves the component associated with the given entity id.
+        /// </summary>
+        public Component[] GetComponents(int eid)
+        {
+            List<Component> components = new List<Component>();
+            for(int i = 0; i < componentCollections.Count; i++)
+            {
+                if (componentCollections[i].Has(eid))
+                    components.Add(componentCollections[i].Get(eid));
+            }
+            return components.ToArray();
+        }
+
+        /// <summary>
         /// Gets the component associated with
         /// </summary>
-        /// <typeparam name="C"></typeparam>
-        /// <param name="eid"></param>
-        /// <returns></returns>
-        public C GetComponent<C>(ulong eid)
+        public C GetComponent<C>(int eid)
             where C : Component
         {
-            return GetCollection(typeof(C)).Get(eid) as C;
+            return Get(typeof(C)).Get(eid) as C;
         }
 
         /// <summary>
         /// Removes the component
         /// </summary>
-        /// <typeparam name="C"></typeparam>
-        /// <param name="eid"></param>
-        /// <returns></returns>
-        public C RemoveComponent<C>(ulong eid)
+        public C RemoveComponent<C>(int eid)
             where C : Component
         {
-            var c = GetCollection(typeof(C)).Remove(eid) as C;
-            OnComponentRemoved?.Invoke(eid, c);
+            var collection = Get(typeof(C));
+            var c = collection.Remove(eid) as C;
+
+            ComponentInfo info;
+            info.id = collection.GetId();
+            info.component = c;
+
+            OnRemoved?.Invoke(eid, info);
 
             return c;
         }
@@ -81,7 +113,7 @@ namespace CaboodleES.Manager
         /// Removes all of the entity id's components.
         /// </summary>
         /// <param name="eid"></param>
-        public void RemoveComponents(ulong eid)
+        public void RemoveComponents(int eid)
         {
             for (int i = 0; i < componentCollections.Count; i++)
             {
@@ -92,7 +124,7 @@ namespace CaboodleES.Manager
         /// <summary>
         /// Checks if the entity id has the component C.
         /// </summary>
-        public bool HasComponent<C>(ulong eid)
+        public bool HasComponent<C>(int eid)
             where C : Component
         {
             IComponentCollection collection = null;
@@ -104,9 +136,14 @@ namespace CaboodleES.Manager
             return collection.Has(eid);
         }
 
-        public ulong GetFilter(System.Type c)
+        public IComponentCollection Get(global::System.Type c)
         {
-            return GetCollection(c).GetFilter();
+            IComponentCollection cm = null;
+            componentCollectionCache.TryGetValue(c, out cm);
+            if (cm == null)
+                throw new NoSuchComponentException("No such component, " + c.Name, c.Name);
+
+            return cm;
         }
 
         /// <summary>
@@ -120,17 +157,6 @@ namespace CaboodleES.Manager
             }
             componentCollectionCache.Clear();
             componentCollections.Clear();
-            cfilter = 0x00;
-        }
-
-        private IComponentCollection GetCollection(System.Type ctype)
-        {
-            IComponentCollection cm = null;
-            componentCollectionCache.TryGetValue(ctype, out cm);
-            if(cm == null)
-                throw new NoSuchComponentException("No such component, " + ctype.Name, ctype.Name);
-
-            return cm;
         }
     }
 }

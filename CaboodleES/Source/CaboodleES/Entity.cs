@@ -1,28 +1,36 @@
-﻿using CaboodleES.Interface;
-
+﻿
 
 namespace CaboodleES
 {
     /// <summary>
-    /// Simple handle to manipulate components.
+    /// Handle to manipulate components.
     /// </summary>
     public sealed class Entity
     {
-        public ulong Id { get { return _id; } }
+        public int Id { get { return _id; } }
+        public bool Active { get { return _active; } set { _active = value; } }
         public Caboodle World { get { return _world; } }
 
-        private readonly ulong _id;
+        private readonly int _id;
         private readonly Caboodle _world;
+        private bool _active;
+        internal readonly Utils.BitMask mask;
 
-        /// <summary>
-        /// Constructor should only be called by CaboodleES.
-        /// </summary>
-        /// <param name="entityWorld"></param>
-        /// <param name="id"></param>
-        internal Entity(Caboodle entityWorld, ulong id)
+
+        internal Entity(Caboodle entityWorld, int id)
         {
             this._world = entityWorld;
             this._id = id;
+            this._active = true;
+            this.mask = new Utils.BitMask();
+        }
+
+        /// <summary>
+        /// Retrieves all components.
+        /// </summary>
+        public Component[] GetComponents()
+        {
+            return _world.Entities.Components.GetComponents(_id);
         }
 
         /// <summary>
@@ -30,6 +38,13 @@ namespace CaboodleES
         /// </summary>
         public C GetComponent<C>() where C : Component
         {
+            //Component c;
+            //componentCache.TryGetValue(typeof(C), out c);
+
+            //if (c != null)
+            //    return (C)c;
+            //return (C)componentCache[typeof(C)];
+
             return _world.Entities.Components.GetComponent<C>(_id);
         }
 
@@ -52,15 +67,13 @@ namespace CaboodleES
         /// <summary>
         /// Checks if the entity has a component of type {C}.
         /// </summary>
-        /// <typeparam name="C"></typeparam>
-        /// <returns></returns>
         public bool HasComponent<C>() where C : Component
         {
             return _world.Entities.Components.HasComponent<C>(_id);
         }
 
         /// <summary>
-        /// Deletes all components associated with the entity.
+        /// Deletes all components associated with the entity and expires the id.
         /// </summary>
         public void Destroy()
         {
@@ -69,7 +82,7 @@ namespace CaboodleES
 
         public override string ToString()
         {
-            return string.Format("[Entity - {0}] ", this._id);
+            return string.Format("Entity({0})", this._id);
         }
     }
 }

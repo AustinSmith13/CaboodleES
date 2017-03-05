@@ -19,7 +19,7 @@ namespace CaboodleEsTest
             {
                 caboodle = new Caboodle();
             }
-            finally { Assert.IsNotNull(caboodle, "Failed to initialize Aurora ECS."); }
+            finally { Assert.IsNotNull(caboodle, "Failed to initialize ECS."); }
         }
 
         [TestMethod]
@@ -41,7 +41,7 @@ namespace CaboodleEsTest
         {
             float expected = 51f;
             Entity entityToTest = null;
-            for(int i = 0; i < 100; i++)
+            for(int i = 0; i < 10000; i++)
             {
                 Entity newEnt = caboodle.Entities.Create();
                 newEnt.AddComponent<MockTransform>().x = i;

@@ -5,7 +5,7 @@ namespace CaboodleES
 {
 
     [Serializable]
-    public class ComponentAlreadyExistsException : System.Exception
+    public class ComponentAlreadyExistsException : global::System.Exception
     {
 
         public string component { get; private set; }

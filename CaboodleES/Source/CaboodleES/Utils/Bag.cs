@@ -1,302 +1,152 @@
-﻿#region File description
-
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Bag.cs" company="GAMADU.COM">
-//     Copyright © 2013 GAMADU.COM. All rights reserved.
-//
-//     Redistribution and use in source and binary forms, with or without modification, are
-//     permitted provided that the following conditions are met:
-//
-//        1. Redistributions of source code must retain the above copyright notice, this list of
-//           conditions and the following disclaimer.
-//
-//        2. Redistributions in binary form must reproduce the above copyright notice, this list
-//           of conditions and the following disclaimer in the documentation and/or other materials
-//           provided with the distribution.
-//
-//     THIS SOFTWARE IS PROVIDED BY GAMADU.COM 'AS IS' AND ANY EXPRESS OR IMPLIED
-//     WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-//     FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GAMADU.COM OR
-//     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-//     CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-//     SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-//     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-//     ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//     The views and conclusions contained in the software and documentation are those of the
-//     authors and should not be interpreted as representing official policies, either expressed
-//     or implied, of GAMADU.COM.
-// </copyright>
-// <summary>
-//   Class Bag.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-#endregion File description
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace CaboodleES.Utils
 {
-    #region Using statements
-
-    using global::System;
-    using global::System.Collections;
-    using global::System.Collections.Generic;
-
-    #endregion Using statements
-
-    /// <summary>Class Bag.</summary>
-    /// <typeparam name="T">The <see langword="Type"/> T.</typeparam>
-    public class Bag<T> : IEnumerable<T>
+    public class Bag<T> : IList<T>
     {
-        /// <summary>The elements.</summary>
-        private T[] elements;
+        private List<T> elements;
+        private int next;
 
-        /// <summary>Initializes a new instance of the <see cref="Bag{T}"/> class.</summary>
-        /// <param name="capacity">The capacity.</param>
-        public Bag(int capacity = 16)
-        {
-            this.elements = new T[capacity];
-            this.Count = 0;
-        }
+        public int Count { get { return next; } }
 
-        /// <summary>Gets the capacity.</summary>
-        /// <value>The capacity.</value>
-        public int Capacity
+        public Boolean IsReadOnly
         {
             get
             {
-                return this.elements.Length;
+                return false;
             }
         }
 
-        /// <summary>Gets a value indicating whether this instance is empty.</summary>
-        /// <value><see langword="true" /> if this instance is empty; otherwise, <see langword="false" />.</value>
-        public bool IsEmpty
+        public Boolean IsFixedSize
         {
             get
             {
-                return this.Count == 0;
+                return false;
             }
         }
 
-        /// <summary>Gets the size.</summary>
-        /// <value>The size.</value>
-        public int Count { get; private set; }
 
-        /// <summary>Returns the element at the specified position in Bag.</summary>
-        /// <param name="index">The index.</param>
-        /// <returns>The element from the specified position in Bag.</returns>
-        public T this[int index]
+        public Boolean IsSynchronized
         {
             get
             {
-                return this.elements[index];
+                throw new NotImplementedException();
             }
+        }
 
+        public Bag()
+        {
+            elements = new List<T>(32);
+            next = 0;
+        }
+
+        
+        public T this[int key]
+        {
+            get
+            {
+                return elements[key];
+            }
             set
             {
-                if (index >= this.elements.Length)
-                {
-                    this.Grow(index * 2);
-                    this.Count = index + 1;
-                }
-                else if (index >= this.Count)
-                {
-                    this.Count = index + 1;
-                }
-
-                this.elements[index] = value;
-            }
+                elements[key] = value;
+            } 
         }
 
-        /// <summary>
-        /// Adds the specified element to the end of this bag.
-        /// If needed also increases the capacity of the bag.
-        /// </summary>
-        /// <param name="element">The element to be added to this list.</param>
-        public void Add(T element)
-        {
-            // is size greater than capacity increase capacity
-            if (this.Count == this.elements.Length)
-            {
-                this.Grow();
-            }
+       // public void Grow()
+       // {
+        //    var old = elements;
+        //    elements = new List<T>(elements.Count * 2);
+        //    for(int i = 0; i < old.Count; i++)
+        //        elements[i] = old[i];
+            
+       // }
 
-            this.elements[this.Count] = element;
-            ++this.Count;
-        }
-
-        /// <summary>Adds a range of elements into this bag.</summary>
-        /// <param name="rangeOfElements">The elements to add.</param>
-        public void AddRange(Bag<T> rangeOfElements)
-        {
-            for (int index = 0, j = rangeOfElements.Count; j > index; ++index)
-            {
-                this.Add(rangeOfElements.Get(index));
-            }
-        }
-
-        /// <summary>
-        /// Removes all of the elements from this bag.
-        /// The bag will be empty after this call returns.
-        /// </summary>
         public void Clear()
         {
-            // Null all elements so garbage collector can clean up.
-            for (int index = this.Count - 1; index >= 0; --index)
+            elements = new List<T>(32);
+            next = 0;
+        }
+
+        public void RemoveAt(Int32 index)
+        {
+            if (index >= next - 1)
             {
-                this.elements[index] = default(T);
+                elements[index] = default(T);
+                next--;
+                return;
             }
 
-            this.Count = 0;
+            var temp = elements[--next];
+            elements[index] = temp;
         }
 
-        /// <summary>Determines whether bag contains the specified element.</summary>
-        /// <param name="element">The element.</param>
-        /// <returns><see langword="true"/> if bag contains the specified element; otherwise, <see langword="false"/>.</returns>
-        public bool Contains(T element)
+        public void CopyTo(Array array, Int32 index)
         {
-            for (int index = this.Count - 1; index >= 0; --index)
+            for(int i = index; i < array.Length && i < elements.Count; i++)
             {
-                if (element.Equals(this.elements[index]))
-                {
-                    return true;
-                }
+                array.SetValue(elements[i], i);
             }
-
-            return false;
         }
 
-        /// <summary>Gets the specified index.</summary>
-        /// <param name="index">The index.</param>
-        /// <returns>The specified element.</returns>
-        public T Get(int index)
+        public Int32 IndexOf(T item)
         {
-            return this.elements[index];
-        }
-
-        /// <summary>Removes the specified index.</summary>
-        /// <param name="index">The index.</param>
-        /// <returns>The removed element.</returns>
-        public T Remove(int index)
-        {
-            // Make copy of element to remove so it can be returned.
-            T result = this.elements[index];
-            --this.Count;
-
-            // Overwrite item to remove with last element.
-            this.elements[index] = this.elements[this.Count];
-
-            // Null last element, so garbage collector can do its work.
-            this.elements[this.Count] = default(T);
-            return result;
-        }
-
-        /// <summary>
-        /// <para>Removes the first occurrence of the specified element from this Bag, if it is present.</para>
-        /// <para>If the Bag does not contain the element, it is unchanged.</para>
-        /// <para>Does this by overwriting it was last element then removing last element.</para>
-        /// </summary>
-        /// <param name="element">The element to be removed from this list, if present.</param>
-        /// <returns><see langword="true"/> if this list contained the specified element, otherwise <see langword="false"/>.</returns>
-        public bool Remove(T element)
-        {
-            for (int index = this.Count - 1; index >= 0; --index)
+            for (int i = 0; i < elements.Count; i++)
             {
-                if (element.Equals(this.elements[index]))
-                {
-                    --this.Count;
-
-                    // Overwrite item to remove with last element.
-                    this.elements[index] = this.elements[this.Count];
-                    this.elements[this.Count] = default(T);
-
-                    return true;
-                }
+                if (item.Equals(elements[i]))
+                    return i;
             }
-
-            return false;
+            return -1;
         }
 
-        /// <summary>Removes all matching elements.</summary>
-        /// <param name="bag">The bag.</param>
-        /// <returns><see langword="true" /> if found matching elements, <see langword="false" /> otherwise.</returns>
-        public bool RemoveAll(Bag<T> bag)
+        public void Insert(Int32 index, T item)
         {
-            bool isResult = false;
-            for (int index = bag.Count - 1; index >= 0; --index)
-            {
-                if (this.Remove(bag.Get(index)))
-                {
-                    isResult = true;
-                }
-            }
-
-            return isResult;
+            elements[index] = item;
         }
 
-        /// <summary>Removes the last.</summary>
-        /// <returns>The last element.</returns>
-        public T RemoveLast()
+        public void Add(T item)
         {
-            if (this.Count > 0)
-            {
-                --this.Count;
-                T result = this.elements[this.Count];
-
-                // default(T) if class = null.
-                this.elements[this.Count] = default(T);
-                return result;
-            }
-
-            return default(T);
+            //if (next >= elements.Count)
+            //    Grow();
+            // elements[next++] =  item;
+            elements.Add(item);
+            next++;
         }
 
-        /// <summary>Sets the specified index.</summary>
-        /// <param name="index">The index.</param>
-        /// <param name="element">The element.</param>
-        public void Set(int index, T element)
+        public Boolean Contains(T item)
         {
-            if (index >= this.elements.Length)
-            {
-                this.Grow(index * 2);
-                this.Count = index + 1;
-            }
-            else if (index >= this.Count)
-            {
-                this.Count = index + 1;
-            }
-
-            this.elements[index] = element;
+            //for (int i = 0; i < elements.Count; i++)
+            //{
+            //    if (item.Equals(elements[i]))
+            //        return true;
+            // }
+            //return false;
+            return elements.Contains(item);
         }
 
-        /// <summary>Returns an enumerator that iterates through a collection.</summary>
-        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1" /> object that can be used to iterate through the collection.</returns>
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        public void CopyTo(T[] array, Int32 arrayIndex)
         {
-            return new BagEnumerator<T>(this);
+            elements.CopyTo(array, arrayIndex);
         }
 
-        /// <summary>Returns an enumerator that iterates through a collection.</summary>
-        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1" /> object that can be used to iterate through the collection.</returns>
+        public Boolean Remove(T item)
+        {
+            Int32 i = this.IndexOf(item);
+            if (i == -1) return false;
+            RemoveAt(i);
+            return true;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return elements.GetEnumerator();
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new BagEnumerator<T>(this);
-        }
-
-        /// <summary>Grows this instance.</summary>
-        private void Grow()
-        {
-            this.Grow((int)(this.elements.Length * 1.5) + 1);
-        }
-
-        /// <summary>Grows the specified new capacity.</summary>
-        /// <param name="newCapacity">The new capacity.</param>
-        private void Grow(int newCapacity)
-        {
-            T[] oldElements = this.elements;
-            this.elements = new T[newCapacity];
-            Array.Copy(oldElements, 0, this.elements, 0, oldElements.Length);
+            return elements.GetEnumerator();
         }
     }
 }
