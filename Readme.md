@@ -75,9 +75,11 @@ Components can be removed two ways.
  ```
  
  #### Processors (Systems)
+ 
  Processors (Systems) process (Update) a set of entities that contain the components of interest.
  
  ##### Attributes
+ 
  [CaboodleES.Attributes.ComponentUsageAttribute(
  priority, loopType, aspect, components...)]
  * Priority - Used to organize the execution of systems
@@ -87,10 +89,12 @@ Components can be removed two ways.
  
  
  ##### Inter-System-Communication
+ 
  Processors can communicate with each other via the EventManager. Use the AddEvent<>(myEvent) method to add a new event. Newly added events
  are handled at the end of an update (process). To add a handler to handle the event(s) use AddHandler<>(myHandler) method.
  
  ##### Usage
+ 
  ```cs
  public class ExampleEvent : IEventArg {
     public string exampleVariable;
