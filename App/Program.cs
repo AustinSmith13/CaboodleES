@@ -33,7 +33,7 @@ namespace CaboodleES
 
             while (true)
             {
-                world.Systems.Process();
+                world.Systems.Update();
                 var a = Console.ReadKey(true);
 
                 if(a.KeyChar == 'a')
@@ -46,7 +46,7 @@ namespace CaboodleES
                     watch.Reset();
                     watch.Start();
 
-                    world.Systems.Process();
+                    world.Systems.Update();
 
                     Console.WriteLine("Systems Processed : " + watch.Elapsed.TotalMilliseconds + " ms");
                 }

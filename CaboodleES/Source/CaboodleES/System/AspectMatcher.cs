@@ -12,7 +12,12 @@ namespace CaboodleES.System
             switch(aspect)
             {
                 case Aspect.Has:
-                    return left >= right;
+                    for (int i = 0; i < left.Count && i < right.Count; i++)
+                    {
+                        if (left.Get(i) == true && right.Get(i) != true)
+                            return false;
+                    }
+                    return true;
 
                 case Aspect.Match:
                     return left == right;

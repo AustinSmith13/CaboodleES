@@ -74,11 +74,11 @@ Components can be removed two ways.
  var c = caboodle.Entities.Components.RemoveComponent<Rigid>(entity.Id);
  ```
  
- #### Processors (Systems)
+#### Processors (Systems)
  
  Processors (Systems) process (Update) a set of entities that contain the components of interest.
  
- ##### Attributes
+##### Attributes
  
  [CaboodleES.Attributes.ComponentUsageAttribute(
  priority, loopType, aspect, components...)]
@@ -88,12 +88,12 @@ Components can be removed two ways.
  * Components - The set of components of interest in respect to the aspect
  
  
- ##### Inter-System-Communication
+##### Inter-System-Communication
  
  Processors can communicate with each other via the EventManager. Use the AddEvent<>(myEvent) method to add a new event. Newly added events
  are handled at the end of an update (process). To add a handler to handle the event(s) use AddHandler<>(myHandler) method.
  
- ##### Usage
+##### Usage
  
  ```cs
  public class ExampleEvent : IEventArg {

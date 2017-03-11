@@ -39,6 +39,11 @@ namespace CaboodleES.System
         public abstract void Start();
         public abstract void Process(IDictionary<int, Entity> entities);
 
+        public void AddComponent<C>(Entity entity) where C : Component
+        {
+
+        }
+
         public void AddHandler<E>(Action<E> handler) where E : IEventArg { _caboodle.Events.AddHandler<E>(handler); }
 
         public void AddEvent<E>(E @event) where E : IEventArg { _caboodle.Events.AddEvent<E>(@event); }

@@ -7,34 +7,16 @@ using System.Linq;
 namespace CaboodleES.Manager
 {
     /// <summary>
-    /// Extension
-    /// </summary>
-    public static class TypeLoaderExtensions
-    {
-
-        public static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
-        {
-            if (assembly == null)
-                throw new ArgumentNullException("assembly");
-            try
-            {
-                return assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException e)
-            {
-                return e.Types.Where(t => t != null);
-            }
-        }
-    }
-
-    /// <summary>
     /// Manages systems.
     /// </summary>
     public sealed class SystemManager : Interface.IManager
     {
-        private readonly List<SystemInfo> systems;
+        private readonly List<SystemInfo> all_systems;
         private readonly Utils.Table<Utils.Table<Entity>> entityCache;
         private readonly Caboodle caboodle;
+        private int updatingSystemsCount = 0, fixedSystemsCount = 0;
+        private SystemInfo[] update_systems;
+        private SystemInfo[] fixed_systems;
         private int nextSystemId;
 
 
@@ -43,9 +25,29 @@ namespace CaboodleES.Manager
             this.caboodle = caboodle;
             this.caboodle.Entities.OnChange += OnEntityChange;
             this.caboodle.Entities.OnRemoved += OnEntityRemoved;
-            this.systems = new List<SystemInfo>();
+            this.all_systems = new List<SystemInfo>();
             this.entityCache = new Utils.Table<Utils.Table<Entity>>();
             nextSystemId = 0;
+        }
+
+        internal void ScheduleAddComponent<C>() where C : Component
+        {
+
+        }
+
+        internal void ScheduleRemoveComponent<C>() where C : Component
+        {
+
+        }
+
+        internal void ScheduleAddEntity()
+        {
+
+        }
+
+        internal void ScheduleRemoveEntity()
+        {
+
         }
 
         /// <summary>
@@ -53,13 +55,13 @@ namespace CaboodleES.Manager
         /// </summary>
         public void OnEntityRemoved(Entity entity)
         {
-            for (int i = 0; i < entityCache.Count; i++)
+            for (int i = 0; i < all_systems.Count; i++)
             {
                 if (entityCache.Has(i))
                 {
                     if (entityCache.Get(i).Has(entity.Id))
                     {
-                        systems[i].entities.Remove(entity.Id);
+                        all_systems[i].entities.Remove(entity.Id);
                         entityCache.Get(i).Remove(entity.Id);
                     }
                 }
@@ -73,18 +75,18 @@ namespace CaboodleES.Manager
         {
             Entity entity = this.caboodle.Entities.Get(eid);
 
-            for(int i = 0; i < systems.Count; i++)
+            for(int i = 0; i < all_systems.Count; i++)
             {
-                var systemMask = systems[i].mask;
+                var systemMask = all_systems[i].mask;
 
                 // match entity mask and system mask
-                if(AspectMatcher.Match(systems[i].processor.Aspect, entity.mask, systemMask) && entity.Active)
+                if(AspectMatcher.Match(all_systems[i].processor.Aspect, entity.mask, systemMask) && entity.Active)
                 {
                     // If the system does not have the entity then add it
                     if (!entityCache.Get(i).Has(entity.Id))
                     {
-                        entityCache.Get(systems[i].processor.Id).Set(entity.Id, entity);
-                        systems[i].entities.Add(entity.Id, entity);
+                        entityCache.Get(all_systems[i].processor.Id).Set(entity.Id, entity);
+                        all_systems[i].entities.Add(entity.Id, entity);
                     }
                 }
                 // The entity does not belong in its collection of entities
@@ -96,7 +98,7 @@ namespace CaboodleES.Manager
                         // Remove the entity from the systems collection if it exists
                         if (entityCache.Get(i).Has(entity.Id))
                         {
-                            systems[i].entities.Remove(entity.Id);
+                            all_systems[i].entities.Remove(entity.Id);
                             entityCache.Get(i).Remove(entity.Id);
                         }
                     }
@@ -129,7 +131,7 @@ namespace CaboodleES.Manager
         /// </summary>
         public T Get<T>() where T : Processor
         {
-            foreach(SystemInfo info in systems)
+            foreach(SystemInfo info in all_systems)
                 if (info.processor.GetSystemType() == typeof(T)) return info.processor as T;
 
             return null;
@@ -142,7 +144,7 @@ namespace CaboodleES.Manager
         /// <returns></returns>
         public bool Has<T>() where T : Processor
         {
-            foreach (SystemInfo info in systems)
+            foreach (SystemInfo info in all_systems)
                 if (info.processor.GetSystemType() == typeof(T)) return true;
 
             return false;
@@ -191,10 +193,12 @@ namespace CaboodleES.Manager
             }
 
 
-            system.SetAttr(caboodle, nextSystemId++, priority, aspect, loop, stype);
+            system.SetAttr(caboodle, nextSystemId, priority, aspect, loop, stype);
             SystemInfo info = new SystemInfo(systemMask, system, new Dictionary<int, Entity>());
-            entityCache.Set(nextSystemId - 1, new Utils.Table<Entity>());
-            systems.Add(info);
+            entityCache.Set(nextSystemId, new Utils.Table<Entity>());
+            all_systems.Add(info);
+
+            nextSystemId += 1;
         }
 
         private IEnumerable<Type> GetTypesWithInterface<T>(Assembly asm)
@@ -203,32 +207,62 @@ namespace CaboodleES.Manager
             return asm.GetLoadableTypes().Where(it.IsAssignableFrom).ToList();
         }
 
-        public void Process()
+        public void Update()
         {
             SystemInfo info;
-            for (int i = 0; i < systems.Count; i++)
+            for (int i = 0; i < updatingSystemsCount; i++)
             {
-                info = systems[i];
+                info = update_systems[i];
                 info.processor.Process(info.entities);
             }
 
             caboodle.Events.Invoke();
         }
 
+        public void FixedUpdate()
+        {
+            SystemInfo info;
+            for(int i = 1; i < fixedSystemsCount; i++)
+            {
+                info = fixed_systems[i];
+                info.processor.Process(info.entities);
+            }
+        }
+
+        /// <summary>
+        /// Initializes all systems. Should only be called once before any updates are made to 
+        /// the systems. Sorts each system based on its priority and loop type
+        /// (e.g. FixedUpdate, Update, once).
+        /// </summary>
         public void Init()
         {
-            systems.Sort((x, y) => x.processor.Priority.CompareTo(y.processor.Priority));
+            all_systems.Sort((x, y) => x.processor.Priority.CompareTo(y.processor.Priority));
+            List<SystemInfo> updatingSystems = new List<SystemInfo>();
+            List<SystemInfo> fixedSystems = new List<SystemInfo>();
 
-            for (int i = 0; i < systems.Count; i++)
+            for (int i = 0; i < all_systems.Count; i++)
             {
-                systems[i].processor.Start();
+                all_systems[i].processor.Start();
 
-                if (systems[i].processor.Loop == Attributes.LoopType.Once) {
-                    systems[i].processor.Process(systems[i].entities);
-                    systems.RemoveAt(i--);
+                switch (all_systems[i].processor.Loop)
+                {
+                    case Attributes.LoopType.Once:
+                        all_systems[i].processor.Process(all_systems[i].entities);
+                        break;
+                    case Attributes.LoopType.Update:
+                        updatingSystemsCount++;
+                        updatingSystems.Add(all_systems[i]);
+                        break;
+                    case Attributes.LoopType.FixedUpdate:
+                        fixedSystemsCount++;
+                        fixedSystems.Add(all_systems[i]);
+                        break;
+                    default:
+                        break;
                 }
-
             }
+            update_systems = updatingSystems.ToArray();
+            fixed_systems = fixedSystems.ToArray();
         }
 
         struct SystemInfo
@@ -246,4 +280,26 @@ namespace CaboodleES.Manager
             }
         }
     }
+
+    /// <summary>
+    /// Extension
+    /// </summary>
+    public static class TypeLoaderExtensions
+    {
+
+        public static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
+        {
+            if (assembly == null)
+                throw new ArgumentNullException("assembly");
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null);
+            }
+        }
+    }
+
 }

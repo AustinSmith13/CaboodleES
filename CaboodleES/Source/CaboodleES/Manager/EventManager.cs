@@ -7,20 +7,20 @@ namespace CaboodleES
     public class EventManager : IManager
     {
         private Caboodle caboodle;
-        private HashSet<global::System.Type> regTypes;
+        private HashSet<global::System.Type> genTypes;
 
         public void AddHandler<E>(Action<E> handler) where E : IEventArg
         {
-            if (!regTypes.Contains(typeof(E))) 
-                regTypes.Add(typeof(E));
+            if (!genTypes.Contains(typeof(E)))
+                genTypes.Add(typeof(E));
 
             EventsRepository<E>.AddHandler(caboodle.Id, handler);
         }
 
         public void AddEvent<E>(E @event) where E : IEventArg
         {
-            if (!regTypes.Contains(typeof(E)))
-                regTypes.Add(typeof(E));
+            if (!genTypes.Contains(typeof(E)))
+                genTypes.Add(typeof(E));
 
             EventsRepository<E>.AddEvent(caboodle.Id, @event);
         }
@@ -29,7 +29,7 @@ namespace CaboodleES
         {
             var nonGenType = typeof(EventsRepository<>);
 
-            foreach (var qualType in regTypes)
+            foreach (var qualType in genTypes)
             {
                 var genType = nonGenType.MakeGenericType(qualType);
                 var mthd = genType.GetMethod("Invoke");
@@ -41,7 +41,7 @@ namespace CaboodleES
         public EventManager(Caboodle caboodle)
         {
             this.caboodle = caboodle;
-            this.regTypes = new HashSet<Type>();
+            this.genTypes = new HashSet<Type>();
         }
     }
 

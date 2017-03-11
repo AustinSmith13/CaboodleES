@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\CaboodleES\Attributes\AddHandle.cs" />
     <Compile Include="Source\CaboodleES\Attributes\ComponentUsage.cs" />
     <Compile Include="Source\CaboodleES\ComponentInfo.cs" />
     <Compile Include="Source\CaboodleES\Exception\ComponentAlreadyExistsException.cs" />
@@ -73,7 +72,6 @@
     <Compile Include="Source\CaboodleES\Exception\NoSuchEntityException.cs" />
     <Compile Include="Source\CaboodleES\Manager\PoolManager.cs" />
     <Compile Include="Source\CaboodleES\System\Processor.cs" />
-    <Compile Include="Source\CaboodleES\Group.cs" />
     <Compile Include="Source\CaboodleES\Manager\EventManager.cs" />
   </ItemGroup>
   <ItemGroup>

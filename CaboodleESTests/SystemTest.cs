@@ -28,20 +28,21 @@ namespace CaboodleEsTest
             var entity = caboodle.Entities.Create();
             entity.AddComponent<Rendering>();
             entity.AddComponent<Transform>();
-            //caboodle.Systems.Process();
-            
-            Assert.AreEqual(0, entity.GetComponent<Transform>().z);
-            caboodle.Systems.Init();
 
-            Assert.AreEqual(3, entity.GetComponent<Transform>().z);
+            caboodle.Entities.Remove(0);
 
-            caboodle.Systems.Process();
-            var entity2 = caboodle.Entities.Create();
-            entity2.AddComponent<Rendering>();
-            entity.Destroy();
-            ////caboodle.Systems.Process();
-            //Assert.AreEqual(true, entity2.GetComponent<Rendering>().test);
-            //Assert.AreEqual(true, entity.GetComponent<Rendering>().test);
+            var count = caboodle.Entities.Count;
+
+            for(int i = 0; i < 1000; i++)
+            {
+                var e = caboodle.Entities.Create();
+                e.AddComponent<Transform>();
+
+                caboodle.Systems.Update();
+            }
+
+            Assert.AreEqual(count, caboodle.Entities.Count);
+
         }
 
         public class Transform : Component { public int x, y, z; }
@@ -52,7 +53,6 @@ namespace CaboodleEsTest
             public string message;
         }
 
-        [CaboodleES.Attributes.AddHandle(typeof(int))]
         [CaboodleES.Attributes.ComponentUsageAttribute(1, CaboodleES.Attributes.LoopType.Once,
             Aspect.Match, typeof(Transform), typeof(Rendering))]
         public class MockSystem1 : Processor
@@ -85,7 +85,7 @@ namespace CaboodleEsTest
             }
         }
 
-        [CaboodleES.Attributes.ComponentUsageAttribute(2, Aspect.Match, typeof(Rendering))]
+        [CaboodleES.Attributes.ComponentUsageAttribute(2, Aspect.Match, typeof(Transform))]
         public class MockSystem2 : Processor
         {
             public override void Start()
@@ -99,7 +99,7 @@ namespace CaboodleEsTest
 
                 foreach (var entity in entities.Values)
                 {
-                    //entity.GetComponent<Rendering>().test = true;
+                    entity.Destroy();
                 }
             }
 

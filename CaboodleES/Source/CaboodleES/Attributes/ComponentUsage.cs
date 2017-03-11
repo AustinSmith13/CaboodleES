@@ -58,8 +58,7 @@ namespace CaboodleES.Attributes
     public enum LoopType
     {
         Update,
+        FixedUpdate,
         Once
-        // reactive 
-        // interval
     }
 }
