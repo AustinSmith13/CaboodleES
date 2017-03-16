@@ -7,7 +7,7 @@ namespace CaboodleES.Manager
     /// <summary>
     /// Manages all entities.
     /// </summary>
-    public sealed class EntityManager
+    public sealed class EntityManager : CManager
     {
         public event global::System.Action<Entity> OnAdded;
         public event global::System.Action<Entity> OnRemoved;
@@ -36,15 +36,13 @@ namespace CaboodleES.Manager
         private ComponentManager _components;
         private Table<Entity> entities;
         private Stack<Entity> entityPool;
-        private Caboodle world;
         private int next;
 
-        public EntityManager(Caboodle world)
+        public EntityManager(Caboodle world) : base(world)
         {
             this._components = new ComponentManager(world);
             this.entities = new Table<Entity>();
             this.entityPool = new Stack<Entity>();
-            this.world = world;
 
             _components.OnAdded += OnEntityAddedComponent;
             _components.OnRemoved += OnEntityRemovedComponent;
@@ -72,7 +70,7 @@ namespace CaboodleES.Manager
             if (entityPool.Count > 0)
                 entity = entityPool.Pop();
             else
-                entity = new Entity(world, next++);
+                entity = new Entity(caboodle, next++);
 
             entities.Set(entity.Id, entity);
             OnAdded?.Invoke(entity);

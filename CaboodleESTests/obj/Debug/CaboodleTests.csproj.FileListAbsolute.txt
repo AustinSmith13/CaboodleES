@@ -19,3 +19,10 @@ C:\Source\CaboodleES\CaboodleESTests\obj\Debug\CaboodleTests.csprojResolveAssemb
 C:\Source\CaboodleES\CaboodleESTests\obj\Debug\AuroraTests.dll
 C:\Source\CaboodleES\CaboodleESTests\obj\Debug\AuroraTests.pdb
 C:\Source\CaboodleES\CaboodleESTests\bin\Debug\CaboodleES.dll
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleESTests\bin\Debug\AuroraTests.dll
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleESTests\bin\Debug\AuroraTests.pdb
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleESTests\bin\Debug\CaboodleES.dll
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleESTests\bin\Debug\CaboodleES.pdb
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleESTests\obj\Debug\CaboodleTests.csprojResolveAssemblyReference.cache
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleESTests\obj\Debug\AuroraTests.dll
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleESTests\obj\Debug\AuroraTests.pdb

@@ -51,7 +51,7 @@
     <Compile Include="Source\CaboodleES\Exception\ComponentAlreadyExistsException.cs" />
     <Compile Include="Source\CaboodleES\Interface\ICaboodle.cs" />
     <Compile Include="Source\CaboodleES\Interface\IEvent.cs" />
-    <Compile Include="Source\CaboodleES\Interface\IManager.cs" />
+    <Compile Include="Source\CaboodleES\Manager.cs" />
     <Compile Include="Source\CaboodleES\System\AspectMatcher.cs" />
     <Compile Include="Source\CaboodleES\Manager\ComponentManager.cs" />
     <Compile Include="Source\CaboodleES\System\Aspect.cs" />
@@ -67,7 +67,6 @@
     <Compile Include="Source\CaboodleES\Interface\IComponentCollection.cs" />
     <Compile Include="Source\CaboodleES\Manager\EntityManager.cs" />
     <Compile Include="Source\CaboodleES\Exception\NoSuchComponentException.cs" />
-    <Compile Include="Source\CaboodleES\Manager\GroupManager.cs" />
     <Compile Include="Source\CaboodleES\Interface\ICloneable.cs" />
     <Compile Include="Source\CaboodleES\Exception\NoSuchEntityException.cs" />
     <Compile Include="Source\CaboodleES\Manager\PoolManager.cs" />

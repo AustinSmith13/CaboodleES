@@ -93,6 +93,7 @@ namespace CaboodleES
                         ent.AddComponent<Mock4>();
                         ent.AddComponent<Mock5>();
                         ent.AddComponent<Mock6>();
+                        ent.AddComponent<Mock7>();
                         c.x = 234;
                         c.y = 3434;
                         buffer.Add(ent);
@@ -155,6 +156,7 @@ namespace CaboodleES
         public class Mock4 : Component { public ulong x; public ulong y; public ulong z; }
         public class Mock5 : Component { public ulong x; public ulong y; public ulong z; }
         public class Mock6 : Component { public ulong x; public ulong y; public ulong z; }
+        public class Mock7 : Component { public ulong x; public ulong y; public ulong z; }
         public class MockTransform : Component
         {
             public float x;
@@ -181,7 +183,7 @@ namespace CaboodleES
         string message;
     }
 
-    [Attributes.ComponentUsageAttribute(100, System.Aspect.Has, typeof(Test))]
+    [Attributes.ComponentUsageAttribute(100, System.Aspect.Has, typeof(Program.Mock1))]
     public class MockSystem1 : System.Processor
     {
         Stopwatch watch = new Stopwatch();
@@ -197,7 +199,7 @@ namespace CaboodleES
             watch.Start();
             foreach (var entity in entities.Values)
             {
-                entity.GetComponent<Test>().x = 50;
+                entity.Destroy();
             }
             AddEvent<ExampleEvent>(new ExampleEvent());
             Console.WriteLine("MockSystem1 processing..." + entities.Count);

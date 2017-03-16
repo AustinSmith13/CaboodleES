@@ -10,3 +10,9 @@ C:\Source\CaboodleES\CaboodleES\bin\Release\CaboodleES.pdb
 C:\Source\CaboodleES\CaboodleES\obj\Release\CaboodleES.dll
 C:\Source\CaboodleES\CaboodleES\obj\Release\CaboodleES.pdb
 C:\Source\CaboodleES\CaboodleES\obj\Release\CaboodleES.csprojResolveAssemblyReference.cache
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\bin\Release\CaboodleES.dll.config
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\bin\Release\CaboodleES.dll
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\bin\Release\CaboodleES.pdb
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\obj\Release\CaboodleES.csprojResolveAssemblyReference.cache
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\obj\Release\CaboodleES.dll
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\obj\Release\CaboodleES.pdb

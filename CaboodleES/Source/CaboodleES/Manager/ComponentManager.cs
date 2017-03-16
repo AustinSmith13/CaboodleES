@@ -8,21 +8,19 @@ namespace CaboodleES.Manager
     /// <summary>
     /// Manages component collections by type.
     /// </summary>
-    public sealed class ComponentManager
+    public sealed class ComponentManager : CManager
     {
         public event Action<int, ComponentInfo> OnRemoved;
         public event Action<int, ComponentInfo> OnAdded;
 
         private List<IComponentCollection> componentCollections;
         private Dictionary<global::System.Type, IComponentCollection> componentCollectionCache;
-        private Caboodle world;
         private int _count = 0;
 
-        public ComponentManager(Caboodle world)
+        public ComponentManager(Caboodle caboodle) : base(caboodle)
         {
             componentCollections = new List<IComponentCollection>();
             componentCollectionCache = new Dictionary<global::System.Type, IComponentCollection>();
-            this.world = world;
         }
 
         public void RegisterComponent<C>() where C : Component, new()
@@ -32,7 +30,7 @@ namespace CaboodleES.Manager
             if (collection == null)
             {
                 // Assigns the component collection a filter identifier
-                collection = new ComponentCollection<C>(world, _count++);
+                collection = new ComponentCollection<C>(caboodle, _count++);
                // var c = global::System.Activator.CreateInstance(typeof(C), null);
                 componentCollections.Add(collection);
                 componentCollectionCache.Add(typeof(C), collection);
@@ -52,7 +50,7 @@ namespace CaboodleES.Manager
             if (collection == null)
             {
                 // Assigns the component collection a filter identifier
-                collection = new ComponentCollection<C>(world, _count++);
+                collection = new ComponentCollection<C>(caboodle, _count++);
                 componentCollections.Add(collection);
                 componentCollectionCache.Add(typeof(C), collection);
             }

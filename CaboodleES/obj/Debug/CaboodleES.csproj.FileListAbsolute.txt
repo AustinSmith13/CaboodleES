@@ -17,3 +17,9 @@ C:\Source\CaboodleES\CaboodleES\bin\Debug\CaboodleES.dll.config
 C:\Source\CaboodleES\CaboodleES\bin\Debug\CaboodleES.dll
 C:\Source\CaboodleES\CaboodleES\obj\Debug\CaboodleES.dll
 C:\Source\CaboodleES\CaboodleES\obj\Debug\CaboodleES.csprojResolveAssemblyReference.cache
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\bin\Debug\CaboodleES.dll.config
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\bin\Debug\CaboodleES.dll
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\bin\Debug\CaboodleES.pdb
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\obj\Debug\CaboodleES.csprojResolveAssemblyReference.cache
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\obj\Debug\CaboodleES.dll
+G:\Projects\Creoverse\Source\CaboodleES\CaboodleES\obj\Debug\CaboodleES.pdb

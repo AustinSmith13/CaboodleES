@@ -9,45 +9,37 @@ namespace CaboodleES.Manager
     /// <summary>
     /// Manages systems.
     /// </summary>
-    public sealed class SystemManager : Interface.IManager
+    public sealed class SystemManager : CManager
     {
         private readonly List<SystemInfo> all_systems;
+        private readonly List<Entity> entitiesToRemove;
+        private readonly List<int> entitiesToChange;
         private readonly Utils.Table<Utils.Table<Entity>> entityCache;
-        private readonly Caboodle caboodle;
         private int updatingSystemsCount = 0, fixedSystemsCount = 0;
         private SystemInfo[] update_systems;
         private SystemInfo[] fixed_systems;
         private int nextSystemId;
 
 
-        public SystemManager(Caboodle caboodle)
+        public SystemManager(Caboodle caboodle) : base(caboodle)
         {
-            this.caboodle = caboodle;
-            this.caboodle.Entities.OnChange += OnEntityChange;
-            this.caboodle.Entities.OnRemoved += OnEntityRemoved;
+            this.caboodle.Entities.OnChange += ScheduleEntityChange;
+            this.caboodle.Entities.OnRemoved += ScheduleEntityRemove;
             this.all_systems = new List<SystemInfo>();
             this.entityCache = new Utils.Table<Utils.Table<Entity>>();
+            this.entitiesToRemove = new List<Entity>();
+            this.entitiesToChange = new List<int>();
             nextSystemId = 0;
         }
 
-        internal void ScheduleAddComponent<C>() where C : Component
+        public void ScheduleEntityRemove(Entity entity)
         {
-
+            entitiesToRemove.Add(entity);
         }
 
-        internal void ScheduleRemoveComponent<C>() where C : Component
+        public void ScheduleEntityChange(int eid)
         {
-
-        }
-
-        internal void ScheduleAddEntity()
-        {
-
-        }
-
-        internal void ScheduleRemoveEntity()
-        {
-
+            entitiesToChange.Add(eid);
         }
 
         /// <summary>
@@ -85,7 +77,7 @@ namespace CaboodleES.Manager
                     // If the system does not have the entity then add it
                     if (!entityCache.Get(i).Has(entity.Id))
                     {
-                        entityCache.Get(all_systems[i].processor.Id).Set(entity.Id, entity);
+                        entityCache.Get(i).Set(entity.Id, entity);
                         all_systems[i].entities.Add(entity.Id, entity);
                     }
                 }
@@ -209,6 +201,21 @@ namespace CaboodleES.Manager
 
         public void Update()
         {
+            if (entitiesToRemove.Count > 0)
+            {
+                for (int i = 0; i < entitiesToRemove.Count; i++)
+                    OnEntityRemoved(entitiesToRemove[i]);
+                entitiesToRemove.Clear();
+            }
+
+            if (entitiesToChange.Count > 0)
+            {
+                for (int i = 0; i < entitiesToChange.Count; i++)
+                    OnEntityChange(entitiesToChange[i]);
+                entitiesToChange.Clear();
+            }
+
+
             SystemInfo info;
             for (int i = 0; i < updatingSystemsCount; i++)
             {
@@ -217,6 +224,7 @@ namespace CaboodleES.Manager
             }
 
             caboodle.Events.Invoke();
+            
         }
 
         public void FixedUpdate()
@@ -264,6 +272,7 @@ namespace CaboodleES.Manager
             update_systems = updatingSystems.ToArray();
             fixed_systems = fixedSystems.ToArray();
         }
+
 
         struct SystemInfo
         {

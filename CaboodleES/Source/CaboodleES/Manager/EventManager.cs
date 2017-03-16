@@ -4,9 +4,8 @@ using System;
 
 namespace CaboodleES
 {
-    public class EventManager : IManager
+    public class EventManager : CManager
     {
-        private Caboodle caboodle;
         private HashSet<global::System.Type> genTypes;
 
         public void AddHandler<E>(Action<E> handler) where E : IEventArg
@@ -38,9 +37,8 @@ namespace CaboodleES
             }
         }
 
-        public EventManager(Caboodle caboodle)
+        public EventManager(Caboodle caboodle) : base(caboodle)
         {
-            this.caboodle = caboodle;
             this.genTypes = new HashSet<Type>();
         }
     }

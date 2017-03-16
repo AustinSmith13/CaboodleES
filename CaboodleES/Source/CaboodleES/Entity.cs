@@ -3,7 +3,7 @@
 namespace CaboodleES
 {
     /// <summary>
-    /// Handle to manipulate components.
+    /// Entity handle.
     /// </summary>
     public sealed class Entity
     {
@@ -38,13 +38,6 @@ namespace CaboodleES
         /// </summary>
         public C GetComponent<C>() where C : Component
         {
-            //Component c;
-            //componentCache.TryGetValue(typeof(C), out c);
-
-            //if (c != null)
-            //    return (C)c;
-            //return (C)componentCache[typeof(C)];
-
             return _world.Entities.Components.GetComponent<C>(_id);
         }
 

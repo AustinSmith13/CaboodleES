@@ -59,12 +59,7 @@ namespace CaboodleES.Manager
         /// </summary>
         public Component Get(int eid)
         {
-            var c = components.Get(eid);
-
-            if(c == null)
-                throw new NoSuchComponentException("component does not exist.", typeof(T).ToString());
-           
-            return c;
+            return components.Get(eid);
         }
 
         public bool Has(int eid)

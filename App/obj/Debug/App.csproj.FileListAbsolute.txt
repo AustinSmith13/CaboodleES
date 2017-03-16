@@ -6,3 +6,11 @@ C:\Source\CaboodleES\App\bin\Debug\CaboodleES.pdb
 C:\Source\CaboodleES\App\obj\Debug\App.csprojResolveAssemblyReference.cache
 C:\Source\CaboodleES\App\obj\Debug\App.exe
 C:\Source\CaboodleES\App\obj\Debug\App.pdb
+G:\Projects\Creoverse\Source\CaboodleES\App\bin\Debug\App.exe.config
+G:\Projects\Creoverse\Source\CaboodleES\App\bin\Debug\App.exe
+G:\Projects\Creoverse\Source\CaboodleES\App\bin\Debug\App.pdb
+G:\Projects\Creoverse\Source\CaboodleES\App\bin\Debug\CaboodleES.dll
+G:\Projects\Creoverse\Source\CaboodleES\App\bin\Debug\CaboodleES.pdb
+G:\Projects\Creoverse\Source\CaboodleES\App\obj\Debug\App.csprojResolveAssemblyReference.cache
+G:\Projects\Creoverse\Source\CaboodleES\App\obj\Debug\App.exe
+G:\Projects\Creoverse\Source\CaboodleES\App\obj\Debug\App.pdb

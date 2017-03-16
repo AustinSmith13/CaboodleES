@@ -16,20 +16,21 @@ namespace CaboodleEsTest
         public void TestInit()
         {
             caboodle = new Caboodle();
+            caboodle.Systems.Add<MockSystem2>();
+            caboodle.Systems.Add<MockSystem1>();
+            caboodle.Systems.Init();
             //caboodle.Systems.Add(Assembly.GetAssembly(typeof(SystemTest)));
             Assert.IsNotNull(caboodle, "Failed to initialize.");
         }
 
         [TestMethod]
-        public void TestSystem()
+        public void TestSystemRuntimeChanges()
         {
-            caboodle.Systems.Add<MockSystem1>();
-            caboodle.Systems.Add<MockSystem2>();
-            var entity = caboodle.Entities.Create();
-            entity.AddComponent<Rendering>();
-            entity.AddComponent<Transform>();
+            //var entity = caboodle.Entities.Create();
+            //entity.AddComponent<Rendering>();
+            //entity.AddComponent<Transform>();
 
-            caboodle.Entities.Remove(0);
+           //caboodle.Entities.Remove(0);
 
             var count = caboodle.Entities.Count;
 
@@ -37,11 +38,24 @@ namespace CaboodleEsTest
             {
                 var e = caboodle.Entities.Create();
                 e.AddComponent<Transform>();
+                caboodle.Systems.Update();
+                if (!e.HasComponent<Rendering>())
+                    Assert.Fail();
+                if (e.HasComponent<Transform>())
+                    Assert.Fail();
 
                 caboodle.Systems.Update();
+
+                if (!e.HasComponent<Transform>())
+                    Assert.Fail();
+                if (e.HasComponent<Rendering>())
+                    Assert.Fail();
+
             }
 
-            Assert.AreEqual(count, caboodle.Entities.Count);
+
+
+           // Assert.AreEqual(count, caboodle.Entities.Count);
 
         }
 
@@ -52,60 +66,42 @@ namespace CaboodleEsTest
         {
             public string message;
         }
+    }
 
-        [CaboodleES.Attributes.ComponentUsageAttribute(1, CaboodleES.Attributes.LoopType.Once,
-            Aspect.Match, typeof(Transform), typeof(Rendering))]
-        public class MockSystem1 : Processor
+    [CaboodleES.Attributes.ComponentUsageAttribute(1,
+           CaboodleES.Attributes.LoopType.Update, Aspect.Match, typeof(SystemTest.Transform))]
+    public class MockSystem2 : Processor
+    {
+        public override void Start()
         {
-
-            public override void Start()
-            {
-                var e = new ExampleEvent();
-                e.message = "hello, world";
-                AddEvent<ExampleEvent>(e);
-            }
-
-            public override void Process(IDictionary<int,Entity> entities)
-            {
-                if (entities == null) return;
-                
-                foreach(var entity in entities.Values) {
-
-                    entity.GetComponent<Transform>().x = 1;
-                    entity.GetComponent<Transform>().y = 2;
-                    entity.GetComponent<Transform>().z = 3;
-                    entity.GetComponent<Rendering>().test = true;
-                }
-
-            }
-
-            public bool TestMethod()
-            {
-                return true;
-            }
         }
 
-        [CaboodleES.Attributes.ComponentUsageAttribute(2, Aspect.Match, typeof(Transform))]
-        public class MockSystem2 : Processor
+        public override void Process(IDictionary<int, Entity> entities)
         {
-            public override void Start()
+
+            foreach (var entity in entities.Values)
             {
-                AddHandler<ExampleEvent>(ExampleHandler);
+                entity.RemoveComponent<SystemTest.Transform>();
+                entity.AddComponent<SystemTest.Rendering>();
             }
+        }
+    }
 
-            public override void Process(IDictionary<int, Entity> entities)
+    [CaboodleES.Attributes.ComponentUsageAttribute(2,
+           CaboodleES.Attributes.LoopType.Update, Aspect.Match, typeof(SystemTest.Rendering))]
+    public class MockSystem1 : Processor
+    {
+        public override void Start()
+        {
+        }
+
+        public override void Process(IDictionary<int, Entity> entities)
+        {
+
+            foreach (var entity in entities.Values)
             {
-                if (entities == null) return;
-
-                foreach (var entity in entities.Values)
-                {
-                    entity.Destroy();
-                }
-            }
-
-            public void ExampleHandler(ExampleEvent e)
-            {
-                Assert.AreEqual("hello, world", e.message);
+                entity.RemoveComponent<SystemTest.Rendering>();
+                entity.AddComponent<SystemTest.Transform>();
             }
         }
     }
