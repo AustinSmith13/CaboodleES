@@ -1,11 +1,14 @@
 ﻿using System;
 
-namespace CaboodleES.Interface
+namespace CaboodleES
 {
-    public interface IEventArg
+    public interface IEvent
     {
     }
+}
 
+namespace CaboodleES.Interface
+{
     public interface IEventCollection
     {
         void Invoke();

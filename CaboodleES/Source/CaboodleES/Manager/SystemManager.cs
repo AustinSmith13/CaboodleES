@@ -14,6 +14,7 @@ namespace CaboodleES.Manager
         private readonly List<SystemInfo> all_systems;
         private readonly List<Entity> entitiesToRemove;
         private readonly List<int> entitiesToChange;
+        private readonly List<Action> scheduledActions;
         private readonly Utils.Table<Utils.Table<Entity>> entityCache;
         private int updatingSystemsCount = 0, fixedSystemsCount = 0;
         private SystemInfo[] update_systems;
@@ -29,6 +30,7 @@ namespace CaboodleES.Manager
             this.entityCache = new Utils.Table<Utils.Table<Entity>>();
             this.entitiesToRemove = new List<Entity>();
             this.entitiesToChange = new List<int>();
+            this.scheduledActions = new List<Action>();
             nextSystemId = 0;
         }
 
@@ -40,6 +42,15 @@ namespace CaboodleES.Manager
         public void ScheduleEntityChange(int eid)
         {
             entitiesToChange.Add(eid);
+        }
+
+        public void ScheduleRemoveComponent<C>(int eid) where C : Component
+        {
+            scheduledActions.Add(() =>
+            {
+                if(caboodle.Entities.Has(eid))
+                    caboodle.Entities.Components.RemoveComponent<C>(eid);
+            });
         }
 
         /// <summary>
@@ -185,8 +196,8 @@ namespace CaboodleES.Manager
             }
 
 
+            SystemInfo info = new SystemInfo(systemMask, system, system.Entities);
             system.SetAttr(caboodle, nextSystemId, priority, aspect, loop, stype);
-            SystemInfo info = new SystemInfo(systemMask, system, new Dictionary<int, Entity>());
             entityCache.Set(nextSystemId, new Utils.Table<Entity>());
             all_systems.Add(info);
 
@@ -201,7 +212,43 @@ namespace CaboodleES.Manager
 
         public void Update()
         {
+            if (entitiesToChange.Count > 0)
+            {
+                for (int i = 0; i < entitiesToChange.Count; i++)
+                    OnEntityChange(entitiesToChange[i]);
+                entitiesToChange.Clear();
+            }
             if (entitiesToRemove.Count > 0)
+            {
+                for (int i = 0; i < entitiesToRemove.Count; i++)
+                {
+                    caboodle.Entities.SilentRemove(entitiesToRemove[i].Id);
+                    OnEntityRemoved(entitiesToRemove[i]);
+                }
+                entitiesToRemove.Clear();
+            }
+
+
+            SystemInfo info;
+            for (int i = 0; i < updatingSystemsCount; i++)
+            {
+                info = update_systems[i];
+                info.processor.Process(info.entities);
+            }
+
+            if (scheduledActions.Count > 0)
+            {
+                for (int i = 0; i < scheduledActions.Count; i++)
+                    scheduledActions[i]();
+                scheduledActions.Clear();
+            }
+
+            caboodle.Events.Invoke(); 
+        }
+
+        public void FixedUpdate()
+        {
+            /*if (entitiesToRemove.Count > 0)
             {
                 for (int i = 0; i < entitiesToRemove.Count; i++)
                     OnEntityRemoved(entitiesToRemove[i]);
@@ -213,24 +260,10 @@ namespace CaboodleES.Manager
                 for (int i = 0; i < entitiesToChange.Count; i++)
                     OnEntityChange(entitiesToChange[i]);
                 entitiesToChange.Clear();
-            }
-
+            }*/
 
             SystemInfo info;
-            for (int i = 0; i < updatingSystemsCount; i++)
-            {
-                info = update_systems[i];
-                info.processor.Process(info.entities);
-            }
-
-            caboodle.Events.Invoke();
-            
-        }
-
-        public void FixedUpdate()
-        {
-            SystemInfo info;
-            for(int i = 1; i < fixedSystemsCount; i++)
+            for(int i = 0; i < fixedSystemsCount; i++)
             {
                 info = fixed_systems[i];
                 info.processor.Process(info.entities);
@@ -278,7 +311,7 @@ namespace CaboodleES.Manager
         {
             public readonly Utils.BitMask mask;
             public readonly Processor processor;
-            public readonly Dictionary<int, Entity> entities;
+            public readonly IDictionary<int, Entity> entities;
 
             public SystemInfo(Utils.BitMask mask,
                 Processor processor, Dictionary<int,Entity> entities)

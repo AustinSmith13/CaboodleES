@@ -35,14 +35,11 @@ namespace CaboodleES.Manager
 
         private ComponentManager _components;
         private Table<Entity> entities;
-        private Stack<Entity> entityPool;
-        private int next;
 
         public EntityManager(Caboodle world) : base(world)
         {
             this._components = new ComponentManager(world);
             this.entities = new Table<Entity>();
-            this.entityPool = new Stack<Entity>();
 
             _components.OnAdded += OnEntityAddedComponent;
             _components.OnRemoved += OnEntityRemovedComponent;
@@ -66,11 +63,7 @@ namespace CaboodleES.Manager
         /// <returns></returns>
         public Entity Create()
         {
-            Entity entity;
-            if (entityPool.Count > 0)
-                entity = entityPool.Pop();
-            else
-                entity = new Entity(caboodle, next++);
+            var entity = caboodle.Pool.CreateEntity();
 
             entities.Set(entity.Id, entity);
             OnAdded?.Invoke(entity);
@@ -112,13 +105,23 @@ namespace CaboodleES.Manager
         /// </summary>
         public void Remove(int eid)
         {
-            Entity entity = entities.Get(eid);
-            entity.mask.Clear();
-            entityPool.Push(entity);
+            Entity entity = caboodle.Pool.ReleaseEntity(entities.Get(eid));
             OnRemoved?.Invoke(entity);
             _components.RemoveComponents(eid);
-            entities.Remove(eid);
-    }
+            entities.Remove(eid); // Remove the entity after the events finnish
+        }
+
+        /// <summary>
+        /// Removes an entity and its components without invoking an event. 
+        /// [Note: this a temporary work around]
+        /// </summary>
+        /// <param name="eid"></param>
+        internal void SilentRemove(int eid)
+        {
+            Entity entity = caboodle.Pool.ReleaseEntity(entities.Get(eid));
+            _components.RemoveComponents(eid);
+            entities.Remove(eid); // Remove the entity after the events finnish
+        }
 
         /// <summary>
         /// Removes an entity and its components.

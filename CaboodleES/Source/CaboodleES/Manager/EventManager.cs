@@ -8,7 +8,7 @@ namespace CaboodleES
     {
         private HashSet<global::System.Type> genTypes;
 
-        public void AddHandler<E>(Action<E> handler) where E : IEventArg
+        public void AddHandler<E>(Action<E> handler) where E : IEvent
         {
             if (!genTypes.Contains(typeof(E)))
                 genTypes.Add(typeof(E));
@@ -16,7 +16,7 @@ namespace CaboodleES
             EventsRepository<E>.AddHandler(caboodle.Id, handler);
         }
 
-        public void AddEvent<E>(E @event) where E : IEventArg
+        public void AddEvent<E>(E @event) where E : IEvent
         {
             if (!genTypes.Contains(typeof(E)))
                 genTypes.Add(typeof(E));
@@ -43,7 +43,7 @@ namespace CaboodleES
         }
     }
 
-    public static class EventsRepository<E> where E : IEventArg
+    public static class EventsRepository<E> where E : IEvent
     {
         private static Dictionary<int, EventCollection<E>> eventDictionary =
             new Dictionary<int, EventCollection<E>>();
@@ -80,7 +80,7 @@ namespace CaboodleES
     }
 
     public class EventCollection<E> : IEventCollection
-        where E : IEventArg
+        where E : IEvent
     {
         private List<Action<E>> handlers;
         private List<E> events;

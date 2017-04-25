@@ -17,6 +17,9 @@ namespace CaboodleES.System
         public Aspect Aspect { get { return _aspect; } }
         public Attributes.LoopType Loop { get { return _loopType; } }
 
+        internal Dictionary<int, Entity> Entities { get { return entities; } }
+        protected readonly Dictionary<int, Entity> entities = new Dictionary<int, Entity>();
+
         private bool _active;
         private int _systemId;
         private uint _priority;
@@ -39,9 +42,11 @@ namespace CaboodleES.System
         public abstract void Start();
         public abstract void Process(IDictionary<int, Entity> entities);
 
-        public void AddHandler<E>(Action<E> handler) where E : IEventArg { _caboodle.Events.AddHandler<E>(handler); }
+        public void AddHandler<E>(Action<E> handler) where E : IEvent { _caboodle.Events.AddHandler<E>(handler); }
 
-        public void AddEvent<E>(E @event) where E : IEventArg { _caboodle.Events.AddEvent<E>(@event); }
+        public void AddEvent<E>(E @event) where E : IEvent { _caboodle.Events.AddEvent<E>(@event); }
+
+        public void RemoveEntity(Entity entity) { _caboodle.Systems.ScheduleEntityRemove(entity); }
 
         public global::System.Type GetSystemType()
         {

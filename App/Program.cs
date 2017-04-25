@@ -150,17 +150,18 @@ namespace CaboodleES
 
 #pragma warning disable 0649 
 
-        public class Mock1 : Component { public ulong x; public ulong y; public ulong z; }
-        public class Mock2 : Component { public ulong x; public ulong y; public ulong z; }
-        public class Mock3 : Component { public ulong x; public ulong y; public ulong z; }
-        public class Mock4 : Component { public ulong x; public ulong y; public ulong z; }
-        public class Mock5 : Component { public ulong x; public ulong y; public ulong z; }
-        public class Mock6 : Component { public ulong x; public ulong y; public ulong z; }
-        public class Mock7 : Component { public ulong x; public ulong y; public ulong z; }
+        public class Mock1 : Component { public ulong x; public ulong y; public ulong z; public override void Reset() { } }
+        public class Mock2 : Component { public ulong x; public ulong y; public ulong z; public override void Reset() { } }
+        public class Mock3 : Component { public ulong x; public ulong y; public ulong z; public override void Reset() { } }
+        public class Mock4 : Component { public ulong x; public ulong y; public ulong z; public override void Reset() { } }
+        public class Mock5 : Component { public ulong x; public ulong y; public ulong z; public override void Reset() { } }
+        public class Mock6 : Component { public ulong x; public ulong y; public ulong z; public override void Reset() { } }
+        public class Mock7 : Component { public ulong x; public ulong y; public ulong z; public override void Reset() { } }
         public class MockTransform : Component
         {
             public float x;
             public float y;
+            public override void Reset() { x = 0f; y = 0f; }
         }
     }
 
@@ -168,17 +169,17 @@ namespace CaboodleES
     {
         public float x;
         public float y;
-
+        public override void Reset() { x = 0f; y = 0f; }
     }
 
     public class Trans : Component
     {
         public float x;
         public float y;
-
+        public override void Reset() { x = 0f; y = 0f; }
     }
 
-    public class ExampleEvent : IEventArg
+    public class ExampleEvent : IEvent
     {
         string message;
     }

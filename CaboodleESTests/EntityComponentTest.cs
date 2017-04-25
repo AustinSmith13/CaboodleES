@@ -18,8 +18,20 @@ namespace CaboodleEsTest
             try
             {
                 caboodle = new Caboodle();
+                caboodle.Systems.Add<MockSystem1>();
+                caboodle.Systems.Init();
             }
             finally { Assert.IsNotNull(caboodle, "Failed to initialize ECS."); }
+        }
+
+        [TestMethod]
+        public void TestRemoveEntitySystemReflection()
+        {
+            var e = caboodle.Entities.Create();
+            e.AddComponent<Mock1>();
+            caboodle.Systems.Update();
+            caboodle.Entities.Remove(e.Id);
+            caboodle.Systems.Update();
         }
 
         [TestMethod]
@@ -139,17 +151,39 @@ namespace CaboodleEsTest
 
         
 
-        private class Mock1 : Component { }
-        private class Mock2 : Component { }
-        private class Mock3 : Component { }
-        private class Mock4 : Component { }
-        private class Mock5 : Component { }
-        private class Mock6 : Component { }
+        private class Mock1 : Component { public override void Reset() { } }
+        private class Mock2 : Component { public override void Reset() { } }
+        private class Mock3 : Component { public override void Reset() { } }
+        private class Mock4 : Component { public override void Reset() { } }
+        private class Mock5 : Component { public override void Reset() { } }
+        private class Mock6 : Component { public override void Reset() { } }
 
         private class MockTransform : Component
         {
             public float x;
             public float y;
+            public override void Reset() { x = 0f; y = 0f; }
+        }
+
+        [CaboodleES.Attributes.ComponentUsageAttribute(4,
+           CaboodleES.Attributes.LoopType.Update, CaboodleES.System.Aspect.Match, typeof(Mock1))]
+        public class MockSystem1 : CaboodleES.System.Processor
+        {
+            public override void Start()
+            {
+            }
+
+            public override void Process(IDictionary<int, Entity> entities)
+            {
+                foreach (var entity in entities.Values)
+                {
+                    
+                    if (entity == null)
+                        Assert.Fail();
+
+                    Caboodle.Entities.Get(entity.Id); // This statment should never throw an exception within a System loop
+                }
+            }
         }
     }
 }

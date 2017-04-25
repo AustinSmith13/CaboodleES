@@ -18,7 +18,8 @@ namespace CaboodleES.Manager
         }
 
       
-        private Table<T> components;
+        //private Table<T> components; // Was giving issues...
+        private Dictionary<int, T> components;
        
         //private Bag<T> components;
         private Caboodle caboodle;
@@ -33,7 +34,8 @@ namespace CaboodleES.Manager
         {
             this.caboodle = world;
             this.id = id;
-            this.components = new Table<T>();
+            this.components = new Dictionary<int, T>();
+            //this.components = new Table<T>();
         }
 
         public int GetId()
@@ -49,7 +51,7 @@ namespace CaboodleES.Manager
             if (this.Has(eid)) return this.Get(eid);
             var c = caboodle.Pool.CreateComponent<T>();
 
-            components.Set(eid, c);
+            components.Add(eid, c);
             
             return c;
         }
@@ -59,12 +61,13 @@ namespace CaboodleES.Manager
         /// </summary>
         public Component Get(int eid)
         {
-            return components.Get(eid);
+            return components[eid];
         }
 
         public bool Has(int eid)
         {
-            return components.Get(eid) != null;
+            T c = null;
+            return components.TryGetValue(eid, out c);
         }
 
         /// <summary>
@@ -72,11 +75,12 @@ namespace CaboodleES.Manager
         /// </summary>
         public Component Remove(int eid)
         {
-            var removedComp = components.Get(eid);
+            T removed = null;
+            components.TryGetValue(eid, out removed);
             components.Remove(eid);
-            if (removedComp == null)
+            if (removed == null)
                 return null;
-            return caboodle.Pool.ReleaseComponent(removedComp);
+            return caboodle.Pool.ReleaseComponent(removed);
         }
 
         /// <summary>

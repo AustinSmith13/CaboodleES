@@ -54,7 +54,9 @@ namespace CaboodleES
         /// </summary>
         public C RemoveComponent<C>() where C : Component
         {
-            return _world.Entities.Components.RemoveComponent<C>(_id);
+            _world.Systems.ScheduleRemoveComponent<C>(_id);
+            return GetComponent<C>();
+            //return _world.Entities.Components.RemoveComponent<C>(_id);
         }
 
         /// <summary>

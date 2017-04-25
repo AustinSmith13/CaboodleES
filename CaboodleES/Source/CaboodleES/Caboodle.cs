@@ -6,7 +6,7 @@ namespace CaboodleES
     /// <summary>
     /// Caboodle holds the entity world
     /// </summary>
-    public sealed class Caboodle : Interface.ICaboodle
+    public sealed class Caboodle : ICaboodle
     {
         #region Properties
 
@@ -29,7 +29,7 @@ namespace CaboodleES
         public Caboodle()
         {
             _id = _next++;
-            _poolManager = new PoolManager(8191);
+            _poolManager = new PoolManager(this);
             _entityManager = new EntityManager(this); 
             _systemsManager = new SystemManager(this);
             _eventsManager = new EventManager(this);
@@ -50,11 +50,11 @@ namespace CaboodleES
             return _systemsManager;
         }
 
-        public void Union(Interface.ICaboodle caboodle) { }
+        public void Union(ICaboodle caboodle) { }
 
-        public void Intersection(Interface.ICaboodle caboodle) { }
+        public void Intersection(ICaboodle caboodle) { }
 
-        public void Difference(Interface.ICaboodle caboodle) { }
+        public void Difference(ICaboodle caboodle) { }
 
         public void Clear()
         {
