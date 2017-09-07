@@ -13,7 +13,7 @@ Components are mostly organized sequentially in memory for fast access.
 
 A **caboodle** is an entity world that encapsulates entities, components, and systems. Systems can only process entities within the same caboodle they exist in, however you can copy/union data between caboodle objects. 
 
-###Getting started
+### Getting started
 First include the library.
 
 
@@ -33,7 +33,7 @@ Call union to unify two caboodle's.
  caboodle.Union(anotherCaboodle);
  ```
 
-####Adding Entities
+#### Adding Entities
 You can think of entities as containers of components. Internally they do not actually contain any components they only contain an integer id that can be used as a key for accessing components from component collections. 
 
 To create an entity you must call the create method inside the caboodle object.
@@ -42,7 +42,7 @@ To create an entity you must call the create method inside the caboodle object.
  var entity = caboodle.Entities.Create();
  ```
 
-####Removing Entities
+#### Removing Entities
 Removing an entity will release all of its components back to the pool. 
 
 Entities can be removed two ways.
@@ -53,7 +53,7 @@ Entities can be removed two ways.
  caboodle.Entities.Remove(entity)
  ```
 
-####Adding Components
+#### Adding Components
 
 When you create a new entity and add a new component, a component collection is allocated for storing that specific type of components. Systems choose the component collections they are interested in.
 
